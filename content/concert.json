@@ -68,12 +68,12 @@
       "caption": "Performance Live - Titre 1"
     },
     {
-      "url": "https://www.youtube.com/watch?v=8l-QQ0cS_rc",
-      "caption": "Session Acoustique - Titre 2"
+      "url": "https://www.youtube.com/embed/WrqxkAmMzK4",
+      "caption": "Les yeux Noirs"
     },
     {
-      "url": "https://www.youtube.com/watch?v=WrqxkAmMzK4",
-      "caption": "Les yeux Noirs"
+      "url": "https://www.youtube.com/embed/8l-QQ0cS_rc",
+      "caption": "Apache"
     }
   ],
   "registration": {
