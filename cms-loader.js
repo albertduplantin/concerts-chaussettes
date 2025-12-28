@@ -146,12 +146,6 @@ class CMSLoader {
     updateRegistration() {
         const { registration } = this.data;
 
-        const placesInfo = document.getElementById('places-info');
-
-        if (placesInfo) {
-            placesInfo.textContent = `${registration.max_places} places disponibles`;
-        }
-
         // Mettre à jour le prix
         const priceCard = document.getElementById('price-card');
         if (priceCard && registration.price !== undefined) {
@@ -170,6 +164,8 @@ class CMSLoader {
         // Mettre à jour le max dans le script de gestion
         if (window.concertManager) {
             window.concertManager.maxGuests = registration.max_places;
+            // Forcer la mise à jour de l'UI pour afficher les places restantes
+            window.concertManager.updateUI();
         }
     }
 
