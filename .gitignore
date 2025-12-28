@@ -1,0 +1,25 @@
+# Node modules (si vous utilisez npm)
+node_modules/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Fichiers de l'éditeur
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Images uploadées (optionnel - décommentez si vous voulez les ignorer)
+# images/uploads/
+
+# Fichiers temporaires
+*.tmp
+*.bak

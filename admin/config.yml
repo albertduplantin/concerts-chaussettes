@@ -1,0 +1,132 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Pour tester en local sans Git
+local_backend: true
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "concert"
+    label: "Configuration du Concert"
+    files:
+      - name: "concert-info"
+        label: "Informations du Concert"
+        file: "content/concert.json"
+        fields:
+          # Section Hero
+          - label: "Section Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - {label: "Titre Principal", name: "title", widget: "string", default: "Concert Privé Exclusif"}
+              - {label: "Sous-titre", name: "subtitle", widget: "string", default: "Une soirée musicale inoubliable"}
+              - {label: "Date (affichage)", name: "date_display", widget: "string", default: "Samedi 15 Février 2025 · 20h00"}
+              - {label: "Image de fond (URL)", name: "background_image", widget: "string", required: false}
+
+          # Section À propos
+          - label: "Section À Propos"
+            name: "about"
+            widget: "object"
+            fields:
+              - {label: "Titre", name: "title", widget: "string", default: "L'Événement"}
+              - {label: "Description", name: "description", widget: "text"}
+
+          # Section Artiste
+          - label: "Artiste"
+            name: "artist"
+            widget: "object"
+            fields:
+              - {label: "Nom du Groupe/Artiste", name: "name", widget: "string"}
+              - {label: "Photo principale (URL)", name: "photo", widget: "image"}
+              - {label: "Légende de la photo", name: "photo_caption", widget: "string", default: "Photo du groupe"}
+              - {label: "Biographie", name: "bio", widget: "text"}
+              - label: "Statistiques"
+                name: "stats"
+                widget: "object"
+                fields:
+                  - {label: "Années d'expérience", name: "experience", widget: "string", default: "10+"}
+                  - {label: "Nombre de concerts", name: "concerts", widget: "string", default: "500+"}
+                  - {label: "Nombre de fans", name: "fans", widget: "string", default: "50k+"}
+
+          # Galerie Photos
+          - label: "Galerie Photos"
+            name: "gallery"
+            widget: "list"
+            fields:
+              - {label: "Image (URL)", name: "image", widget: "image"}
+              - {label: "Description (alt)", name: "alt", widget: "string"}
+
+          # Vidéos
+          - label: "Vidéos"
+            name: "videos"
+            widget: "list"
+            fields:
+              - {label: "URL YouTube (embed)", name: "url", widget: "string", hint: "Format: https://www.youtube.com/embed/VIDEO_ID"}
+              - {label: "Légende", name: "caption", widget: "string"}
+
+          # Section Réservation
+          - label: "Réservation"
+            name: "registration"
+            widget: "object"
+            fields:
+              - {label: "Nombre de places disponibles", name: "max_places", widget: "number", default: 30}
+              - {label: "Entrée gratuite ?", name: "free_entry", widget: "boolean", default: true}
+              - {label: "Type d'ambiance", name: "ambiance", widget: "string", default: "Concert acoustique"}
+
+          # Informations Pratiques
+          - label: "Date et Heure"
+            name: "datetime"
+            widget: "object"
+            fields:
+              - {label: "Date complète", name: "full_date", widget: "string", default: "Samedi 15 Février 2025"}
+              - {label: "Heure d'ouverture des portes", name: "doors", widget: "string", default: "19h30"}
+              - {label: "Heure de début du concert", name: "start", widget: "string", default: "20h00"}
+              - {label: "Heure de fin prévue", name: "end", widget: "string", default: "23h00"}
+
+          # Programme
+          - label: "Programme"
+            name: "program"
+            widget: "list"
+            fields:
+              - {label: "Heure", name: "time", widget: "string"}
+              - {label: "Description", name: "description", widget: "string"}
+
+          # Restauration
+          - label: "Restauration"
+            name: "catering"
+            widget: "list"
+            fields:
+              - {label: "Service", name: "item", widget: "string"}
+
+          # À savoir
+          - label: "À Savoir"
+            name: "good_to_know"
+            widget: "list"
+            fields:
+              - {label: "Information", name: "info", widget: "string"}
+
+          # Localisation
+          - label: "Lieu"
+            name: "venue"
+            widget: "object"
+            fields:
+              - {label: "Adresse complète", name: "address", widget: "string"}
+              - {label: "Google Maps Embed URL", name: "map_embed", widget: "text", hint: "Allez sur Google Maps, cliquez sur Partager > Intégrer une carte, et copiez l'URL du src"}
+              - label: "Accès Transport"
+                name: "transport"
+                widget: "object"
+                fields:
+                  - {label: "Métro", name: "metro", widget: "string"}
+                  - {label: "Bus", name: "bus", widget: "string"}
+                  - {label: "Vélib", name: "velib", widget: "string"}
+
+          # Contact
+          - label: "Contact"
+            name: "contact"
+            widget: "object"
+            fields:
+              - {label: "Email", name: "email", widget: "string"}
+              - {label: "Note de bas de page", name: "footer_note", widget: "string"}

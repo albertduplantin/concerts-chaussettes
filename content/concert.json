@@ -1,0 +1,129 @@
+{
+  "contact": {
+    "email": "contact@concert-prive.fr",
+    "footer_note": "Ce concert est un événement privé organisé dans le respect du voisinage"
+  },
+  "program": [
+    {
+      "time": "19h30",
+      "description": "Accueil & cocktail"
+    },
+    {
+      "time": "20h00",
+      "description": "Premier set"
+    },
+    {
+      "time": "21h00",
+      "description": "Pause"
+    },
+    {
+      "time": "21h30",
+      "description": "Second set"
+    }
+  ],
+  "artist": {
+    "name": "Nom du Groupe",
+    "photo": "/images/uploads/img_20250722_103858.jpg",
+    "photo_caption": "Photo du groupe",
+    "bio": "Ajoutez ici la biographie du groupe - leur histoire, leur style musical, leurs influences, et ce qui rend leur musique unique. Cette section peut être éditée pour personnaliser votre page.",
+    "stats": {
+      "experience": "10+",
+      "concerts": "500+",
+      "fans": "50k+"
+    }
+  },
+  "good_to_know": [
+    {
+      "info": "Tenue correcte exigée"
+    },
+    {
+      "info": "Places assises limitées"
+    },
+    {
+      "info": "Pas de parking sur place"
+    },
+    {
+      "info": "Transports en commun recommandés"
+    }
+  ],
+  "about": {
+    "title": "L'Événement",
+    "description": "Plongez dans une expérience musicale unique lors de ce concert intimiste organisé dans un cadre chaleureux et exclusif. Une soirée exceptionnelle qui restera gravée dans vos mémoires."
+  },
+  "venue": {
+    "address": "123 Rue de la Musique, 75001 Paris",
+    "map_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.292292615674892!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fec70fb1183%3A0x6a9b0b7c4a0e0e0a!2sParis%2C%20France!5e0!3m2!1sen!2sfr!4v1234567890123!5m2!1sen!2sfr",
+    "transport": {
+      "metro": "Ligne 1 - Station Tuileries (5 min à pied)",
+      "bus": "Lignes 21, 27, 72",
+      "velib": "Station à 100m"
+    }
+  },
+  "gallery": [
+    {
+      "image": "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=300&fit=crop",
+      "alt": "Concert photo 1"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop",
+      "alt": "Concert photo 2"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&h=300&fit=crop",
+      "alt": "Concert photo 3"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&h=300&fit=crop",
+      "alt": "Concert photo 4"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop",
+      "alt": "Concert photo 5"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&h=300&fit=crop",
+      "alt": "Concert photo 6"
+    }
+  ],
+  "videos": [
+    {
+      "url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "caption": "Performance Live - Titre 1"
+    },
+    {
+      "url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "caption": "Session Acoustique - Titre 2"
+    }
+  ],
+  "registration": {
+    "max_places": 30,
+    "free_entry": true,
+    "ambiance": "Concert acoustique"
+  },
+  "hero": {
+    "title": "Concert Privé Exclusif",
+    "subtitle": "Une soirée musicale inoubliable",
+    "date_display": "Samedi 15 Février 2025 · 20h00",
+    "background_image": ""
+  },
+  "datetime": {
+    "full_date": "Samedi 15 Février 2025",
+    "doors": "19h30",
+    "start": "20h00",
+    "end": "23h00"
+  },
+  "catering": [
+    {
+      "item": "Apéritif offert à l'arrivée"
+    },
+    {
+      "item": "Buffet disponible"
+    },
+    {
+      "item": "Boissons sur place"
+    },
+    {
+      "item": "Possibilité d'apporter une bouteille"
+    }
+  ]
+}

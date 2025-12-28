@@ -1,0 +1,72 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║   🎵  CONCERT PRIVÉ - LANDING PAGE AVEC CMS  🎵                ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+👋 BIENVENUE !
+
+Vous pouvez maintenant modifier TOUT le contenu de votre page de concert
+via une interface graphique simple, sans toucher au code !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DÉMARRAGE ULTRA RAPIDE (Windows)
+
+1. Double-cliquez sur :  start-cms.bat
+2. Attendez quelques secondes
+3. L'interface admin s'ouvre automatiquement
+4. Modifiez ce que vous voulez
+5. Cliquez sur "Publish"
+6. C'est fait !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 QUE POUVEZ-VOUS MODIFIER ?
+
+✅ Tous les textes (titre, description, biographie...)
+✅ Toutes les photos (upload direct ou URL)
+✅ Les vidéos YouTube
+✅ Les dates et horaires
+✅ L'adresse et la carte Google Maps
+✅ Le nombre de places disponibles
+✅ Les informations de contact
+✅ Et bien plus encore !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION
+
+- DEMARRAGE-RAPIDE.md    → Comment démarrer en 2 minutes
+- GUIDE-CMS.md           → Guide complet d'utilisation
+- README.md              → Documentation technique
+- STRUCTURE-FICHIERS.md  → Comprendre l'organisation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 ASTUCES
+
+→ Pour tester localement : Double-cliquez sur start-cms.bat
+→ Pour mettre en ligne : Créez un compte gratuit sur Netlify.com
+→ Pour un autre concert : Sauvegardez content/concert.json et modifiez
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 DÉPLOIEMENT EN LIGNE (GRATUIT)
+
+1. Allez sur https://www.netlify.com
+2. Créez un compte (gratuit)
+3. Glissez-déposez le dossier du projet
+4. Votre site est en ligne ! 🎉
+
+Détails dans GUIDE-CMS.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ BESOIN D'AIDE ?
+
+Consultez DEMARRAGE-RAPIDE.md pour un guide pas à pas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                        Bon concert ! 🎵🎸🎤

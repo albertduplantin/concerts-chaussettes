@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concert Privé - Événement Exclusif</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Concert Privé Exclusif</h1>
+            <p class="hero-subtitle">Une soirée musicale inoubliable</p>
+            <div class="hero-date">
+                <span class="date-text">Samedi 15 Février 2025 · 20h00</span>
+            </div>
+            <a href="#inscription" class="cta-button">Réserver ma place</a>
+        </div>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">L'Événement</h2>
+            <p class="about-text">
+                Plongez dans une expérience musicale unique lors de ce concert intimiste organisé dans un cadre chaleureux et exclusif.
+                Une soirée exceptionnelle qui restera gravée dans vos mémoires.
+            </p>
+        </div>
+    </section>
+
+    <!-- Artist Section -->
+    <section class="artist" id="artist">
+        <div class="container">
+            <h2 class="section-title">L'Artiste</h2>
+
+            <div class="artist-bio">
+                <div class="artist-photo">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&h=600&fit=crop" alt="Le groupe" id="artist-main-photo">
+                    <div class="photo-credit">Photo du groupe</div>
+                </div>
+
+                <div class="artist-info">
+                    <h3 class="artist-name">Nom du Groupe</h3>
+                    <p class="artist-description" id="artist-bio-text">
+                        [Ajoutez ici la biographie du groupe - leur histoire, leur style musical, leurs influences,
+                        et ce qui rend leur musique unique. Cette section peut être éditée pour personnaliser votre page.]
+                    </p>
+
+                    <div class="artist-stats">
+                        <div class="stat">
+                            <span class="stat-number">10+</span>
+                            <span class="stat-label">Années d'expérience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Concerts donnés</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">50k+</span>
+                            <span class="stat-label">Fans</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Gallery -->
+            <div class="gallery">
+                <h3 class="gallery-title">Galerie Photos</h3>
+                <div class="gallery-grid" id="photo-gallery">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=300&fit=crop" alt="Concert photo 1">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop" alt="Concert photo 2">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&h=300&fit=crop" alt="Concert photo 3">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&h=300&fit=crop" alt="Concert photo 4">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="Concert photo 5">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&h=300&fit=crop" alt="Concert photo 6">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Section -->
+            <div class="videos">
+                <h3 class="video-title">Découvrez leur musique</h3>
+                <div class="video-grid" id="video-section">
+                    <div class="video-item">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <p class="video-caption">Performance Live - Titre 1</p>
+                    </div>
+                    <div class="video-item">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <p class="video-caption">Session Acoustique - Titre 2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section class="registration" id="inscription">
+        <div class="container">
+            <h2 class="section-title">Réservation</h2>
+
+            <div class="registration-info">
+                <div class="info-card">
+                    <span class="info-icon">👥</span>
+                    <h4>Places Limitées</h4>
+                    <p id="places-info">30 places disponibles</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icon">🎫</span>
+                    <h4>Entrée Gratuite</h4>
+                    <p>Inscription obligatoire</p>
+                </div>
+                <div class="info-card">
+                    <span class="info-icon">🎵</span>
+                    <h4>Ambiance Intimiste</h4>
+                    <p>Concert acoustique</p>
+                </div>
+            </div>
+
+            <div class="registration-form-container">
+                <form class="registration-form" id="registrationForm">
+                    <h3>Inscription au concert</h3>
+
+                    <div class="form-group">
+                        <label for="name">Nom complet *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guests">Nombre de personnes (vous inclus)</label>
+                        <select id="guests" name="guests">
+                            <option value="1">1 personne</option>
+                            <option value="2">2 personnes</option>
+                            <option value="3">3 personnes</option>
+                            <option value="4">4 personnes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message (optionnel)</label>
+                        <textarea id="message" name="message" rows="4" placeholder="Dites-nous quelque chose..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-button">Confirmer mon inscription</button>
+                </form>
+
+                <div class="unregister-section">
+                    <h3>Déjà inscrit ?</h3>
+                    <form class="unregister-form" id="unregisterForm">
+                        <div class="form-group">
+                            <label for="unregister-email">Votre email</label>
+                            <input type="email" id="unregister-email" name="unregister-email" required>
+                        </div>
+                        <button type="submit" class="unregister-button">Me désinscrire</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Registered List -->
+            <div class="registered-list" id="registeredList">
+                <h3>Liste des participants inscrits</h3>
+                <div class="participants-count">
+                    <span id="participants-count">0 personnes inscrites</span>
+                </div>
+                <ul id="participants-list"></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Practical Info Section -->
+    <section class="practical-info" id="infos">
+        <div class="container">
+            <h2 class="section-title">Informations Pratiques</h2>
+
+            <div class="info-grid">
+                <div class="info-block">
+                    <h3>📅 Date & Heure</h3>
+                    <p><strong>Samedi 15 Février 2025</strong></p>
+                    <p>Portes: 19h30</p>
+                    <p>Concert: 20h00</p>
+                    <p>Fin prévue: 23h00</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>🎭 Programme</h3>
+                    <p>19h30 - Accueil & cocktail</p>
+                    <p>20h00 - Premier set</p>
+                    <p>21h00 - Pause</p>
+                    <p>21h30 - Second set</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>🍷 Restauration</h3>
+                    <p>Apéritif offert à l'arrivée</p>
+                    <p>Buffet disponible</p>
+                    <p>Boissons sur place</p>
+                    <p>Possibilité d'apporter une bouteille</p>
+                </div>
+
+                <div class="info-block">
+                    <h3>ℹ️ À savoir</h3>
+                    <p>Tenue correcte exigée</p>
+                    <p>Places assises limitées</p>
+                    <p>Pas de parking sur place</p>
+                    <p>Transports en commun recommandés</p>
+                </div>
+            </div>
+
+            <!-- Map Section -->
+            <div class="map-section">
+                <h3>📍 Localisation</h3>
+                <p class="address" id="venue-address">
+                    <strong>Adresse:</strong> 123 Rue de la Musique, 75001 Paris
+                </p>
+                <div class="map-container" id="map">
+                    <!-- Google Maps will be embedded here -->
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.292292615674892!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fec70fb1183%3A0x6a9b0b7c4a0e0e0a!2sParis%2C%20France!5e0!3m2!1sen!2sfr!4v1234567890123!5m2!1sen!2sfr"
+                        width="100%"
+                        height="450"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <div class="transport-info">
+                    <h4>🚇 Accès</h4>
+                    <p><strong>Métro:</strong> Ligne 1 - Station Tuileries (5 min à pied)</p>
+                    <p><strong>Bus:</strong> Lignes 21, 27, 72</p>
+                    <p><strong>Vélib:</strong> Station à 100m</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Pour toute question, contactez-nous à <a href="mailto:contact@concert-prive.fr">contact@concert-prive.fr</a></p>
+            <p class="footer-note">Ce concert est un événement privé organisé dans le respect du voisinage</p>
+            <p class="copyright">&copy; 2025 Concert Privé. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="cms-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

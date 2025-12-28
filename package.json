@@ -1,0 +1,12 @@
+{
+  "name": "concert-chaussettes",
+  "version": "1.0.0",
+  "description": "Landing page pour concerts privés avec CMS",
+  "scripts": {
+    "start": "npx http-server -p 8080",
+    "cms": "npx netlify-cms-proxy-server"
+  },
+  "keywords": ["concert", "netlify-cms", "landing-page"],
+  "author": "",
+  "license": "MIT"
+}
