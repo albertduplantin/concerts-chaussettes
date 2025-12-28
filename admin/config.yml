@@ -128,5 +128,6 @@ collections:
             name: "contact"
             widget: "object"
             fields:
-              - {label: "Email", name: "email", widget: "string"}
+              - {label: "Email", name: "email", widget: "string", hint: "Sera masqué contre les robots"}
+              - {label: "Téléphone", name: "phone", widget: "string", required: false, hint: "Sera masqué contre les robots (optionnel)"}
               - {label: "Note de bas de page", name: "footer_note", widget: "string"}

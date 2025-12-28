@@ -231,16 +231,80 @@ class CMSLoader {
         }
     }
 
+    // Fonction pour obfusquer l'email contre les robots
+    obfuscateEmail(email) {
+        // Encode l'email en Base64 puis inverse pour masquer
+        const encoded = btoa(email).split('').reverse().join('');
+        return encoded;
+    }
+
+    // Fonction pour déobfusquer et afficher l'email
+    displayEmail(encoded) {
+        const email = atob(encoded.split('').reverse().join(''));
+        return email;
+    }
+
+    // Fonction pour formater le téléphone (masqué)
+    obfuscatePhone(phone) {
+        if (!phone) return '';
+        // Encode le téléphone
+        return btoa(phone).split('').reverse().join('');
+    }
+
+    displayPhone(encoded) {
+        if (!encoded) return '';
+        return atob(encoded.split('').reverse().join(''));
+    }
+
     updateContact() {
         const { contact } = this.data;
 
         const footer = document.querySelector('.footer .container');
         if (footer) {
-            footer.innerHTML = `
-                <p>Pour toute question, contactez-nous à <a href="mailto:${contact.email}">${contact.email}</a></p>
-                <p class="footer-note">${contact.footer_note}</p>
-                <p class="copyright">&copy; 2025 Concert Privé. Tous droits réservés.</p>
-            `;
+            // Obfusquer l'email
+            const emailEncoded = this.obfuscateEmail(contact.email);
+            const phoneEncoded = contact.phone ? this.obfuscatePhone(contact.phone) : '';
+
+            let contactHTML = '<p>Pour toute question, contactez-nous ';
+
+            // Ajouter l'email avec obfuscation
+            contactHTML += `par <span class="contact-email" data-contact="${emailEncoded}">email</span>`;
+
+            // Ajouter le téléphone si présent
+            if (contact.phone) {
+                contactHTML += ` ou par <span class="contact-phone" data-contact="${phoneEncoded}">téléphone</span>`;
+            }
+
+            contactHTML += '</p>';
+            contactHTML += `<p class="footer-note">${contact.footer_note}</p>`;
+            contactHTML += '<p class="copyright">&copy; 2025 Concert Privé. Tous droits réservés.</p>';
+
+            footer.innerHTML = contactHTML;
+
+            // Ajouter les événements pour désobfusquer au clic
+            const emailSpan = footer.querySelector('.contact-email');
+            if (emailSpan) {
+                emailSpan.style.cursor = 'pointer';
+                emailSpan.style.textDecoration = 'underline';
+                emailSpan.style.color = 'var(--color-primary)';
+
+                emailSpan.addEventListener('click', () => {
+                    const email = this.displayEmail(emailEncoded);
+                    emailSpan.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+                });
+            }
+
+            const phoneSpan = footer.querySelector('.contact-phone');
+            if (phoneSpan) {
+                phoneSpan.style.cursor = 'pointer';
+                phoneSpan.style.textDecoration = 'underline';
+                phoneSpan.style.color = 'var(--color-primary)';
+
+                phoneSpan.addEventListener('click', () => {
+                    const phone = this.displayPhone(phoneEncoded);
+                    phoneSpan.innerHTML = `<a href="tel:${phone}">${phone}</a>`;
+                });
+            }
         }
     }
 }
