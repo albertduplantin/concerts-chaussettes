@@ -223,12 +223,11 @@ class CMSLoader {
         // Transport
         const transportInfo = document.querySelector('.transport-info');
         if (transportInfo && venue.transport) {
-            transportInfo.innerHTML = `
-                <h4>🚇 Accès</h4>
-                <p><strong>Métro:</strong> ${venue.transport.metro}</p>
-                <p><strong>Bus:</strong> ${venue.transport.bus}</p>
-                <p><strong>Vélib:</strong> ${venue.transport.velib}</p>
-            `;
+            let transportHTML = '<h4>🚇 Accès</h4>';
+            venue.transport.forEach(item => {
+                transportHTML += `<p><strong>${item.type}:</strong> ${item.details}</p>`;
+            });
+            transportInfo.innerHTML = transportHTML;
         }
     }
 

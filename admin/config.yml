@@ -118,11 +118,10 @@ collections:
               - {label: "Google Maps Embed URL", name: "map_embed", widget: "text", hint: "Allez sur Google Maps, cliquez sur Partager > Intégrer une carte, et copiez l'URL du src"}
               - label: "Accès Transport"
                 name: "transport"
-                widget: "object"
+                widget: "list"
                 fields:
-                  - {label: "Métro", name: "metro", widget: "string"}
-                  - {label: "Bus", name: "bus", widget: "string"}
-                  - {label: "Vélib", name: "velib", widget: "string"}
+                  - {label: "Type de transport", name: "type", widget: "string", hint: "Ex: Métro, Bus, Vélib, Parking, etc."}
+                  - {label: "Détails", name: "details", widget: "string", hint: "Ex: Ligne 1 - Station Tuileries (5 min à pied)"}
 
           # Contact
           - label: "Contact"
