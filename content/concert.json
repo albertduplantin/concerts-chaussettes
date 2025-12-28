@@ -88,7 +88,7 @@
   ],
   "registration": {
     "max_places": 35,
-    "free_entry": false,
+    "price": 10,
     "ambiance": "Concert acoustique"
   },
   "hero": {

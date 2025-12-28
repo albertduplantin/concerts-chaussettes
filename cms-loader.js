@@ -152,6 +152,21 @@ class CMSLoader {
             placesInfo.textContent = `${registration.max_places} places disponibles`;
         }
 
+        // Mettre à jour le prix
+        const priceCard = document.getElementById('price-card');
+        if (priceCard && registration.price !== undefined) {
+            const priceTitle = priceCard.querySelector('h4');
+            const priceText = priceCard.querySelector('p');
+
+            if (registration.price === 0) {
+                priceTitle.textContent = 'Entrée Gratuite';
+                priceText.textContent = 'Inscription obligatoire';
+            } else {
+                priceTitle.textContent = `Entrée ${registration.price}€`;
+                priceText.textContent = 'Inscription obligatoire';
+            }
+        }
+
         // Mettre à jour le max dans le script de gestion
         if (window.concertManager) {
             window.concertManager.maxGuests = registration.max_places;

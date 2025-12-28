@@ -74,7 +74,7 @@ collections:
             widget: "object"
             fields:
               - {label: "Nombre de places disponibles", name: "max_places", widget: "number", default: 30}
-              - {label: "Entrée gratuite ?", name: "free_entry", widget: "boolean", default: true}
+              - {label: "Prix d'entrée (en €)", name: "price", widget: "number", default: 0, hint: "Mettez 0 pour entrée gratuite"}
               - {label: "Type d'ambiance", name: "ambiance", widget: "string", default: "Concert acoustique"}
 
           # Informations Pratiques
