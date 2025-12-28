@@ -1,7 +1,6 @@
 {
   "contact": {
     "email": "contact@concert-prive.fr",
-    "phone": "",
     "footer_note": "Ce concert est un événement privé organisé dans le respect du voisinage"
   },
   "program": [
@@ -49,20 +48,20 @@
     "description": "Nous avons le Plaisir de vous inviter à notre domicile pour ce premier concert concert chaussettes de l'année. Le principe est toujours le même. L'hôte (nous, cette fois ci) offre le repas au groupe. Les invités se voient offrir un punch en arrivant. L'entrée à 10 euros est intégralement versée au Groupe. Vous pouvez apporter quelques chose à partager à la pause (à manger ou à boire). Le tout sera intégralement versé dans vos gosiers."
   },
   "venue": {
-    "address": "25 RUE DES ROUAIRIES, 22100 DINAN",
+    "address": "25 rue des rouairies, Dinan. mais l'entrée se fait par la porte du jardin qui donne sur le parking Geistdoerfer",
     "map_embed": "https://www.google.com/maps/embed?pb=!1m24!1m12!1m3!1d454.4616278775145!2d-2.051153530814764!3d48.45357387596537!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m9!3e0!4m3!3m2!1d48.4536527!2d-2.0509379!4m3!3m2!1d48.4536527!2d-2.0509361!5e0!3m2!1sfr!2sfr!4v1766960799775!5m2!1sfr!2sfr",
     "transport": [
       {
-        "type": "Métro",
-        "details": "Ligne 1 - Station Tuileries (5 min à pied)"
+        "type": "Avion",
+        "details": "Aéroport Roissy -> un hélico privé -> se poser sur le parking"
       },
       {
-        "type": "Bus",
-        "details": "Lignes 21, 27, 72"
+        "type": "Voiture",
+        "details": "Se garer sur le parking Geistdoerfer sur lequel donne la porte de notre jardin"
       },
       {
-        "type": "Vélib",
-        "details": "Station à 100m"
+        "type": "Téléportation",
+        "details": "Utiliser Les cristaux ultraviolets - secteur KB12 - quatrième Parsec"
       }
     ]
   },
