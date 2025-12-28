@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: albertduplantin/concerts-chaussettes
   branch: main
 
 # Pour tester en local sans Git
