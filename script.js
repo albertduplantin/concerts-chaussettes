@@ -131,47 +131,6 @@ class RegistrationManager {
             }
         }
 
-        // Update participants count
-        const participantsCount = document.getElementById('participants-count');
-        if (participantsCount) {
-            participantsCount.textContent = `${this.registrations.length} inscription${this.registrations.length > 1 ? 's' : ''} (${totalGuests} personne${totalGuests > 1 ? 's' : ''})`;
-        }
-
-        // Update participants list
-        this.updateParticipantsList();
-    }
-
-    // Update participants list
-    updateParticipantsList() {
-        const list = document.getElementById('participants-list');
-        if (!list) return;
-
-        if (this.registrations.length === 0) {
-            list.innerHTML = '<li style="text-align: center; background: transparent;">Aucune inscription pour le moment</li>';
-            return;
-        }
-
-        list.innerHTML = this.registrations
-            .sort((a, b) => new Date(a.registeredAt) - new Date(b.registeredAt))
-            .map(reg => `
-                <li>
-                    <div>
-                        <strong>${this.escapeHtml(reg.name)}</strong>
-                        ${reg.guests > 1 ? `<span style="color: #666; margin-left: 10px;">(${reg.guests} personnes)</span>` : ''}
-                        ${reg.phone ? `<br><span style="color: #666; font-size: 0.9rem;">📞 ${this.escapeHtml(reg.phone)}</span>` : ''}
-                    </div>
-                    <span style="color: #999; font-size: 0.9rem;">
-                        ${this.formatDate(reg.registeredAt)}
-                    </span>
-                </li>
-            `).join('');
-    }
-
-    // Format date
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        const options = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return date.toLocaleDateString('fr-FR', options);
     }
 
     // Escape HTML to prevent XSS
@@ -241,10 +200,6 @@ class RegistrationManager {
 
         if (result.success) {
             form.reset();
-            // Scroll to participants list
-            setTimeout(() => {
-                document.getElementById('registeredList').scrollIntoView({ behavior: 'smooth' });
-            }, 1000);
         }
     }
 
