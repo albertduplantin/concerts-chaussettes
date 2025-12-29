@@ -172,13 +172,18 @@ class CMSLoader {
     updatePracticalInfo() {
         const { datetime, program, catering, good_to_know } = this.data;
 
-        // Date et heure
+        // Date et heure - Utilise la date du hero qui est la source principale
         const infoBlocks = document.querySelectorAll('.info-block');
         if (infoBlocks.length >= 1 && datetime) {
             const dateBlock = infoBlocks[0];
+            // Extraire la date depuis hero.date_display (ex: "Samedi 24 janvier 2026 · 20h00")
+            const mainDate = this.data.hero && this.data.hero.date_display ?
+                this.data.hero.date_display.split('·')[0].trim() :
+                datetime.full_date;
+
             dateBlock.innerHTML = `
                 <h3>📅 Date & Heure</h3>
-                <p><strong>${datetime.full_date}</strong></p>
+                <p><strong>${mainDate}</strong></p>
                 <p>Portes: ${datetime.doors}</p>
                 <p>Concert: ${datetime.start}</p>
                 <p>Fin prévue: ${datetime.end}</p>
