@@ -2,14 +2,30 @@
 class RegistrationManager {
     constructor() {
         this.storageKey = 'concertRegistrations';
-        this.maxGuests = 30;
+        this.maxGuests = 35; // Valeur par défaut, sera mise à jour depuis le CMS
         this.init();
     }
 
-    init() {
+    async init() {
+        // Charger la configuration depuis le CMS
+        await this.loadMaxPlacesFromCMS();
         this.loadRegistrations();
         this.setupEventListeners();
         this.updateUI();
+    }
+
+    async loadMaxPlacesFromCMS() {
+        try {
+            const response = await fetch('content/concert.json');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.registration && data.registration.max_places) {
+                    this.maxGuests = data.registration.max_places;
+                }
+            }
+        } catch (error) {
+            console.log('Utilisation de la valeur par défaut pour max_places');
+        }
     }
 
     // Get all registrations from localStorage
@@ -116,10 +132,10 @@ class RegistrationManager {
         const placesInfo = document.getElementById('places-info');
         if (placesInfo) {
             if (availablePlaces > 0) {
-                placesInfo.innerHTML = `${availablePlaces} place${availablePlaces > 1 ? 's' : ''} disponible${availablePlaces > 1 ? 's' : ''}`;
+                placesInfo.innerHTML = `${availablePlaces}/${this.maxGuests} places disponibles`;
                 placesInfo.style.color = availablePlaces < 5 ? '#dc3545' : 'inherit';
             } else {
-                placesInfo.innerHTML = 'Complet';
+                placesInfo.innerHTML = `0/${this.maxGuests} - Complet`;
                 placesInfo.style.color = '#dc3545';
             }
         }
