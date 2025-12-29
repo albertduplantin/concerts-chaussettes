@@ -2,11 +2,22 @@
   "name": "concert-chaussettes",
   "version": "1.0.0",
   "description": "Landing page pour concerts privés avec CMS",
+  "type": "module",
   "scripts": {
     "start": "npx http-server -p 8080",
-    "cms": "npx netlify-cms-proxy-server"
+    "cms": "npx netlify-cms-proxy-server",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push"
   },
   "keywords": ["concert", "netlify-cms", "landing-page"],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "drizzle-orm": "^0.36.4",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.28.1"
+  }
 }

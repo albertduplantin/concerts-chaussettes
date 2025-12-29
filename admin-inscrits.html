@@ -223,10 +223,18 @@
     </div>
 
     <script>
-        // Charger les données depuis le localStorage
-        function loadRegistrations() {
-            const data = localStorage.getItem('concertRegistrations');
-            return data ? JSON.parse(data) : [];
+        // Charger les données depuis la base de données
+        async function loadRegistrations() {
+            try {
+                const response = await fetch('/api/get-registrations');
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.registrations;
+                }
+            } catch (error) {
+                console.error('Erreur chargement inscriptions:', error);
+            }
+            return [];
         }
 
         // Charger la config du concert
@@ -262,7 +270,7 @@
 
         // Afficher les données
         async function displayData() {
-            const registrations = loadRegistrations();
+            const registrations = await loadRegistrations();
             const maxPlaces = await loadConcertConfig();
             const totalPersonnes = getTotalPersonnes(registrations);
             const placesRestantes = maxPlaces - totalPersonnes;
@@ -302,8 +310,8 @@
         }
 
         // Exporter en CSV
-        function exportToCSV() {
-            const registrations = loadRegistrations();
+        async function exportToCSV() {
+            const registrations = await loadRegistrations();
             if (registrations.length === 0) {
                 alert('Aucune donnée à exporter');
                 return;
@@ -333,12 +341,24 @@
         }
 
         // Effacer toutes les données
-        function clearAllData() {
+        async function clearAllData() {
             if (confirm('⚠️ ATTENTION : Cette action va effacer TOUTES les inscriptions. Êtes-vous sûr ?')) {
                 if (confirm('Vraiment sûr ? Cette action est irréversible !')) {
-                    localStorage.removeItem('concertRegistrations');
-                    displayData();
-                    alert('✅ Toutes les données ont été effacées');
+                    try {
+                        const response = await fetch('/api/delete-all-registrations', {
+                            method: 'DELETE'
+                        });
+
+                        if (response.ok) {
+                            await displayData();
+                            alert('✅ Toutes les données ont été effacées');
+                        } else {
+                            alert('❌ Erreur lors de la suppression des données');
+                        }
+                    } catch (error) {
+                        console.error('Erreur suppression:', error);
+                        alert('❌ Erreur de connexion');
+                    }
                 }
             }
         }

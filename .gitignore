@@ -1,6 +1,14 @@
 # Node modules (si vous utilisez npm)
 node_modules/
 
+# Environment variables (IMPORTANT - NE JAMAIS COMMITTER)
+.env
+.env.local
+.env.*.local
+
+# Database migrations
+db/migrations/
+
 # Fichiers système
 .DS_Store
 Thumbs.db
@@ -23,3 +31,6 @@ npm-debug.log*
 # Fichiers temporaires
 *.tmp
 *.bak
+
+# Netlify
+.netlify/

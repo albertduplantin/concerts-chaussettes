@@ -1,15 +1,15 @@
-// === LOCAL STORAGE MANAGEMENT ===
+// === DATABASE API MANAGEMENT ===
 class RegistrationManager {
     constructor() {
-        this.storageKey = 'concertRegistrations';
         this.maxGuests = 35; // Valeur par défaut, sera mise à jour depuis le CMS
+        this.registrations = [];
         this.init();
     }
 
     async init() {
         // Charger la configuration depuis le CMS
         await this.loadMaxPlacesFromCMS();
-        this.loadRegistrations();
+        await this.loadRegistrations();
         this.setupEventListeners();
         this.updateUI();
     }
@@ -28,20 +28,21 @@ class RegistrationManager {
         }
     }
 
-    // Get all registrations from localStorage
-    getRegistrations() {
-        const data = localStorage.getItem(this.storageKey);
-        return data ? JSON.parse(data) : [];
-    }
-
-    // Save registrations to localStorage
-    saveRegistrations(registrations) {
-        localStorage.setItem(this.storageKey, JSON.stringify(registrations));
-    }
-
-    // Load and display registrations
-    loadRegistrations() {
-        this.registrations = this.getRegistrations();
+    // Load and display registrations from database
+    async loadRegistrations() {
+        try {
+            const response = await fetch('/api/get-registrations');
+            if (response.ok) {
+                const data = await response.json();
+                this.registrations = data.registrations;
+            } else {
+                console.error('Failed to load registrations');
+                this.registrations = [];
+            }
+        } catch (error) {
+            console.error('Error loading registrations:', error);
+            this.registrations = [];
+        }
     }
 
     // Calculate total number of guests
@@ -60,7 +61,7 @@ class RegistrationManager {
     }
 
     // Add new registration
-    addRegistration(data) {
+    async addRegistration(data) {
         const totalGuests = this.getTotalGuests();
         const requestedGuests = parseInt(data.guests);
 
@@ -80,49 +81,38 @@ class RegistrationManager {
             };
         }
 
-        // Add registration
-        const registration = {
-            id: Date.now(),
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            guests: data.guests,
-            message: data.message,
-            registeredAt: new Date().toISOString()
-        };
+        // Add registration via API
+        try {
+            const response = await fetch('/api/create-registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
 
-        this.registrations.push(registration);
-        this.saveRegistrations(this.registrations);
-        this.updateUI();
-
-        return {
-            success: true,
-            message: `Inscription confirmée pour ${data.name} (${data.guests} personne${data.guests > 1 ? 's' : ''}) !`
-        };
-    }
-
-    // Remove registration
-    removeRegistration(email) {
-        const index = this.registrations.findIndex(
-            reg => reg.email.toLowerCase() === email.toLowerCase()
-        );
-
-        if (index === -1) {
+            if (response.ok) {
+                await this.loadRegistrations();
+                this.updateUI();
+                return {
+                    success: true,
+                    message: `Inscription confirmée pour ${data.name} (${data.guests} personne${data.guests > 1 ? 's' : ''}) !`
+                };
+            } else {
+                return {
+                    success: false,
+                    message: 'Erreur lors de l\'inscription. Veuillez réessayer.'
+                };
+            }
+        } catch (error) {
+            console.error('Error creating registration:', error);
             return {
                 success: false,
-                message: 'Aucune inscription trouvée avec cet email.'
+                message: 'Erreur de connexion. Veuillez réessayer.'
             };
         }
-
-        const removed = this.registrations.splice(index, 1)[0];
-        this.saveRegistrations(this.registrations);
-        this.updateUI();
-
-        return {
-            success: true,
-            message: `Désinscription confirmée pour ${removed.name}.`
-        };
     }
+
 
     // Update UI with current data
     updateUI() {
@@ -224,17 +214,18 @@ class RegistrationManager {
     }
 
     // Handle registration form submission
-    handleRegistration(form) {
+    async handleRegistration(form) {
         const formData = new FormData(form);
         const data = {
             name: formData.get('name').trim(),
             email: formData.get('email').trim(),
+            phone: formData.get('phone').trim(),
             guests: formData.get('guests'),
             message: formData.get('message').trim()
         };
 
         // Validation
-        if (!data.name || !data.email) {
+        if (!data.name || !data.email || !data.phone) {
             this.showMessage(form, 'Veuillez remplir tous les champs obligatoires.', 'error');
             return;
         }
@@ -245,7 +236,7 @@ class RegistrationManager {
         }
 
         // Attempt registration
-        const result = this.addRegistration(data);
+        const result = await this.addRegistration(data);
         this.showMessage(form, result.message, result.success ? 'success' : 'error');
 
         if (result.success) {
@@ -257,27 +248,9 @@ class RegistrationManager {
         }
     }
 
-    // Handle unregistration form submission
+    // Handle unregistration form submission (disabled - contact admin)
     handleUnregistration(form) {
-        const formData = new FormData(form);
-        const email = formData.get('unregister-email').trim();
-
-        if (!email) {
-            this.showMessage(form, 'Veuillez entrer votre adresse email.', 'error');
-            return;
-        }
-
-        if (!this.isValidEmail(email)) {
-            this.showMessage(form, 'Veuillez entrer une adresse email valide.', 'error');
-            return;
-        }
-
-        const result = this.removeRegistration(email);
-        this.showMessage(form, result.message, result.success ? 'success' : 'error');
-
-        if (result.success) {
-            form.reset();
-        }
+        this.showMessage(form, 'Pour vous désinscrire, veuillez contacter l\'organisateur.', 'error');
     }
 
     // Validate email format
