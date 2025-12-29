@@ -151,15 +151,6 @@ class RegistrationManager {
             });
         }
 
-        // Unregister form
-        const unregisterForm = document.getElementById('unregisterForm');
-        if (unregisterForm) {
-            unregisterForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleUnregistration(e.target);
-            });
-        }
-
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
@@ -201,11 +192,6 @@ class RegistrationManager {
         if (result.success) {
             form.reset();
         }
-    }
-
-    // Handle unregistration form submission (disabled - contact admin)
-    handleUnregistration(form) {
-        this.showMessage(form, 'Pour vous désinscrire, veuillez contacter l\'organisateur.', 'error');
     }
 
     // Validate email format
