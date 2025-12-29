@@ -85,6 +85,7 @@ class RegistrationManager {
             id: Date.now(),
             name: data.name,
             email: data.email,
+            phone: data.phone,
             guests: data.guests,
             message: data.message,
             registeredAt: new Date().toISOString()
@@ -167,6 +168,7 @@ class RegistrationManager {
                     <div>
                         <strong>${this.escapeHtml(reg.name)}</strong>
                         ${reg.guests > 1 ? `<span style="color: #666; margin-left: 10px;">(${reg.guests} personnes)</span>` : ''}
+                        ${reg.phone ? `<br><span style="color: #666; font-size: 0.9rem;">📞 ${this.escapeHtml(reg.phone)}</span>` : ''}
                     </div>
                     <span style="color: #999; font-size: 0.9rem;">
                         ${this.formatDate(reg.registeredAt)}
