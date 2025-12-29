@@ -151,6 +151,15 @@ class RegistrationManager {
             });
         }
 
+        // Unregister form
+        const unregisterForm = document.getElementById('unregisterForm');
+        if (unregisterForm) {
+            unregisterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleUnregistration(e.target);
+            });
+        }
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', (e) => {
@@ -191,6 +200,53 @@ class RegistrationManager {
 
         if (result.success) {
             form.reset();
+        }
+    }
+
+    // Handle unregistration form submission
+    async handleUnregistration(form) {
+        const formData = new FormData(form);
+        const email = formData.get('unregister-email').trim();
+
+        // Validation
+        if (!email) {
+            this.showMessage(form, 'Veuillez entrer votre adresse email.', 'error');
+            return;
+        }
+
+        if (!this.isValidEmail(email)) {
+            this.showMessage(form, 'Veuillez entrer une adresse email valide.', 'error');
+            return;
+        }
+
+        // Confirm before deletion
+        if (!confirm(`Êtes-vous sûr de vouloir annuler votre inscription avec l'email ${email} ?`)) {
+            return;
+        }
+
+        // Attempt unregistration via API
+        try {
+            const response = await fetch('/api/delete-registration', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                await this.loadRegistrations();
+                this.updateUI();
+                this.showMessage(form, data.message, 'success');
+                form.reset();
+            } else {
+                this.showMessage(form, data.error || 'Aucune inscription trouvée avec cet email.', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting registration:', error);
+            this.showMessage(form, 'Erreur de connexion. Veuillez réessayer.', 'error');
         }
     }
 
