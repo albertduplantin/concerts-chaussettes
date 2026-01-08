@@ -87,7 +87,7 @@
     }
   ],
   "registration": {
-    "max_places": 35,
+    "max_places": 33,
     "price": 10,
     "ambiance": "Concert acoustique"
   },
