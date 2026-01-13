@@ -160,6 +160,136 @@
             text-decoration: underline;
         }
 
+        .action-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .edit-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #45a049;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .save-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #45a049;
+        }
+
+        .cancel-btn {
+            background: #999;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #777;
+        }
+
         @media print {
             body {
                 background: white;
@@ -212,14 +342,64 @@
                     <th>Nb personnes</th>
                     <th>Message</th>
                     <th>Date d'inscription</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
                 <tr>
-                    <td colspan="6" class="no-data">Chargement...</td>
+                    <td colspan="7" class="no-data">Chargement...</td>
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Modal pour éditer une inscription -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Modifier l'inscription</h2>
+            <form id="editForm">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-group">
+                    <label for="edit-name">Nom *</label>
+                    <input type="text" id="edit-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-email">Email *</label>
+                    <input type="email" id="edit-email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-phone">Téléphone *</label>
+                    <input type="tel" id="edit-phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-guests">Nombre de personnes *</label>
+                    <select id="edit-guests" required>
+                        <option value="1">1 personne</option>
+                        <option value="2">2 personnes</option>
+                        <option value="3">3 personnes</option>
+                        <option value="4">4 personnes</option>
+                        <option value="5">5 personnes</option>
+                        <option value="6">6 personnes</option>
+                        <option value="7">7 personnes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-message">Message</label>
+                    <textarea id="edit-message"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel-btn" onclick="closeEditModal()">Annuler</button>
+                    <button type="submit" class="modal-btn save-btn">Enregistrer</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -284,7 +464,7 @@
             const tbody = document.getElementById('tableBody');
 
             if (registrations.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="no-data">Aucune inscription pour le moment</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">Aucune inscription pour le moment</td></tr>';
                 return;
             }
 
@@ -298,6 +478,146 @@
                         <td><span class="guests-badge">${reg.guests || 1} ${reg.guests > 1 ? 'personnes' : 'personne'}</span></td>
                         <td>${reg.message ? escapeHtml(reg.message) : '-'}</td>
                         <td class="date-small">${formatDate(reg.registeredAt)}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editRegistration(${reg.id})">✏️ Modifier</button>
+                            <button class="action-btn delete-btn" onclick="deleteRegistration(${reg.id}, '${escapeHtml(reg.name).replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        // Ouvrir le modal d'édition
+        function editRegistration(id) {
+            const registrations = JSON.parse(sessionStorage.getItem('currentRegistrations') || '[]');
+            const reg = registrations.find(r => r.id === id);
+
+            if (!reg) {
+                alert('Inscription non trouvée');
+                return;
+            }
+
+            // Remplir le formulaire
+            document.getElementById('edit-id').value = reg.id;
+            document.getElementById('edit-name').value = reg.name;
+            document.getElementById('edit-email').value = reg.email;
+            document.getElementById('edit-phone').value = reg.phone || '';
+            document.getElementById('edit-guests').value = reg.guests || 1;
+            document.getElementById('edit-message').value = reg.message || '';
+
+            // Afficher le modal
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Fermer le modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            document.getElementById('editForm').reset();
+        }
+
+        // Gérer la soumission du formulaire d'édition
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const data = {
+                id: document.getElementById('edit-id').value,
+                name: document.getElementById('edit-name').value.trim(),
+                email: document.getElementById('edit-email').value.trim(),
+                phone: document.getElementById('edit-phone').value.trim(),
+                guests: document.getElementById('edit-guests').value,
+                message: document.getElementById('edit-message').value.trim()
+            };
+
+            try {
+                const response = await fetch('/api/update-registration', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('✅ ' + result.message);
+                    closeEditModal();
+                    await displayData();
+                } else {
+                    alert('❌ ' + (result.error || 'Erreur lors de la mise à jour'));
+                }
+            } catch (error) {
+                console.error('Error updating registration:', error);
+                alert('❌ Erreur de connexion');
+            }
+        });
+
+        // Supprimer une inscription
+        async function deleteRegistration(id, name) {
+            if (!confirm(`⚠️ Êtes-vous sûr de vouloir supprimer l'inscription de ${name} ?\n\nCette action est irréversible.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/delete-registration-by-id', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('✅ ' + result.message);
+                    await displayData();
+                } else {
+                    alert('❌ ' + (result.error || 'Erreur lors de la suppression'));
+                }
+            } catch (error) {
+                console.error('Error deleting registration:', error);
+                alert('❌ Erreur de connexion');
+            }
+        }
+
+        // Stocker les registrations en session pour l'édition
+        async function displayData() {
+            const registrations = await loadRegistrations();
+
+            // Stocker dans sessionStorage pour l'édition
+            sessionStorage.setItem('currentRegistrations', JSON.stringify(registrations));
+
+            const maxPlaces = await loadConcertConfig();
+            const totalPersonnes = getTotalPersonnes(registrations);
+            const placesRestantes = maxPlaces - totalPersonnes;
+
+            // Mettre à jour les stats
+            document.getElementById('totalInscriptions').textContent = registrations.length;
+            document.getElementById('totalPersonnes').textContent = totalPersonnes;
+            document.getElementById('placesRestantes').textContent = placesRestantes;
+
+            // Afficher le tableau
+            const tbody = document.getElementById('tableBody');
+
+            if (registrations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="no-data">Aucune inscription pour le moment</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = registrations
+                .sort((a, b) => new Date(a.registeredAt) - new Date(b.registeredAt))
+                .map(reg => `
+                    <tr>
+                        <td><strong>${escapeHtml(reg.name)}</strong></td>
+                        <td><a href="mailto:${escapeHtml(reg.email)}" class="email">${escapeHtml(reg.email)}</a></td>
+                        <td>${reg.phone ? `<a href="tel:${escapeHtml(reg.phone)}" class="phone">${escapeHtml(reg.phone)}</a>` : '-'}</td>
+                        <td><span class="guests-badge">${reg.guests || 1} ${reg.guests > 1 ? 'personnes' : 'personne'}</span></td>
+                        <td>${reg.message ? escapeHtml(reg.message) : '-'}</td>
+                        <td class="date-small">${formatDate(reg.registeredAt)}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editRegistration(${reg.id})">✏️ Modifier</button>
+                            <button class="action-btn delete-btn" onclick="deleteRegistration(${reg.id}, '${escapeHtml(reg.name).replace(/'/g, "\\'")}')">🗑️ Supprimer</button>
+                        </td>
                     </tr>
                 `).join('');
         }
@@ -360,6 +680,14 @@
                         alert('❌ Erreur de connexion');
                     }
                 }
+            }
+        }
+
+        // Fermer le modal si on clique en dehors
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
             }
         }
 
