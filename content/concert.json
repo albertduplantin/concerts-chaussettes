@@ -113,5 +113,23 @@
     {
       "item": "Possibilité d'apporter une bouteille"
     }
-  ]
+  ],
+  "email_config": {
+    "sender_name": "Concert Chaussettes",
+    "sender_email": "onboarding@resend.dev"
+  },
+  "email_templates": {
+    "invitation": {
+      "subject": "🎵 Invitation : {{artist_name}} en concert !",
+      "content": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n<h1 style=\"color: #667eea; text-align: center;\">🎵 Concert Chaussettes</h1>\n<p>Bonjour,</p>\n<p>Nous avons le plaisir de vous inviter à notre prochain concert !</p>\n<div style=\"background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n<h2 style=\"color: #333; margin-top: 0;\">{{artist_name}}</h2>\n<p><strong>📅 Date :</strong> {{date}}</p>\n<p><strong>🚪 Ouverture des portes :</strong> {{doors_time}}</p>\n<p><strong>🎸 Début du concert :</strong> {{start_time}}</p>\n<p><strong>📍 Lieu :</strong> {{venue}}</p>\n<p><strong>💰 Entrée :</strong> {{price}}</p>\n</div>\n<p style=\"text-align: center;\"><a href=\"{{site_url}}\" style=\"background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block;\">Réserver ma place</a></p>\n<p>À très bientôt !</p>\n<hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n<p style=\"font-size: 12px; color: #999; text-align: center;\">Cet email a été envoyé depuis Concert Chaussettes</p>\n</div>"
+    },
+    "reminder": {
+      "subject": "⏰ Rappel : Concert de {{artist_name}} bientôt !",
+      "content": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n<h1 style=\"color: #667eea; text-align: center;\">⏰ Rappel Concert</h1>\n<p>Bonjour,</p>\n<p><strong>N'oubliez pas !</strong> Le concert approche à grands pas.</p>\n<div style=\"background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #ffc107;\">\n<h2 style=\"color: #333; margin-top: 0;\">{{artist_name}}</h2>\n<p><strong>📅 Date :</strong> {{date}}</p>\n<p><strong>🚪 Ouverture des portes :</strong> {{doors_time}}</p>\n<p><strong>📍 Lieu :</strong> {{venue}}</p>\n</div>\n<p>Nous avons hâte de vous y voir !</p>\n<p style=\"text-align: center;\"><a href=\"{{site_url}}\" style=\"background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block;\">Voir les détails</a></p>\n<hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n<p style=\"font-size: 12px; color: #999; text-align: center;\">Cet email a été envoyé depuis Concert Chaussettes</p>\n</div>"
+    },
+    "custom": {
+      "subject": "Nouvelles du Concert Chaussettes",
+      "content": "<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;\">\n<h1 style=\"color: #667eea; text-align: center;\">🎵 Concert Chaussettes</h1>\n<p>Bonjour,</p>\n<p>[Votre message ici]</p>\n<p style=\"text-align: center;\"><a href=\"{{site_url}}\" style=\"background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block;\">Visiter le site</a></p>\n<hr style=\"border: none; border-top: 1px solid #eee; margin: 20px 0;\">\n<p style=\"font-size: 12px; color: #999; text-align: center;\">Cet email a été envoyé depuis Concert Chaussettes</p>\n</div>"
+    }
+  }
 }

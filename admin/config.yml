@@ -131,3 +131,35 @@ collections:
               - {label: "Email", name: "email", widget: "string", hint: "Sera masqué contre les robots"}
               - {label: "Téléphone", name: "phone", widget: "string", required: false, hint: "Sera masqué contre les robots (optionnel)"}
               - {label: "Note de bas de page", name: "footer_note", widget: "string"}
+
+          # Configuration Email
+          - label: "Configuration Email"
+            name: "email_config"
+            widget: "object"
+            fields:
+              - {label: "Nom de l'expéditeur", name: "sender_name", widget: "string", default: "Concert Privé"}
+              - {label: "Email de l'expéditeur", name: "sender_email", widget: "string", default: "onboarding@resend.dev", hint: "Changez après avoir vérifié votre domaine dans Resend"}
+
+          # Templates Email
+          - label: "Templates Email"
+            name: "email_templates"
+            widget: "object"
+            fields:
+              - label: "Template Invitation"
+                name: "invitation"
+                widget: "object"
+                fields:
+                  - {label: "Sujet par défaut", name: "subject", widget: "string", default: "🎵 Invitation au prochain concert !"}
+                  - {label: "Contenu HTML", name: "content", widget: "text", hint: "Variables disponibles: {{artist_name}}, {{date}}, {{venue}}, {{doors_time}}, {{start_time}}, {{price}}, {{site_url}}"}
+              - label: "Template Rappel"
+                name: "reminder"
+                widget: "object"
+                fields:
+                  - {label: "Sujet par défaut", name: "subject", widget: "string", default: "⏰ Rappel : Concert dans quelques jours !"}
+                  - {label: "Contenu HTML", name: "content", widget: "text", hint: "Variables disponibles: {{artist_name}}, {{date}}, {{venue}}, {{doors_time}}, {{start_time}}, {{price}}, {{site_url}}"}
+              - label: "Template Personnalisé"
+                name: "custom"
+                widget: "object"
+                fields:
+                  - {label: "Sujet par défaut", name: "subject", widget: "string", default: "Nouvelles du concert"}
+                  - {label: "Contenu HTML", name: "content", widget: "text", hint: "Variables disponibles: {{artist_name}}, {{date}}, {{venue}}, {{doors_time}}, {{start_time}}, {{price}}, {{site_url}}"}

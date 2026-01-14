@@ -7,7 +7,7 @@ export async function handler(event) {
   }
 
   try {
-    const { to, subject, htmlContent, fromName } = JSON.parse(event.body);
+    const { to, subject, htmlContent, fromName, fromEmail } = JSON.parse(event.body);
 
     if (!to || !Array.isArray(to) || to.length === 0) {
       return {
@@ -49,7 +49,7 @@ export async function handler(event) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: `${fromName || 'Concert Privé'} <onboarding@resend.dev>`,
+            from: `${fromName || 'Concert Privé'} <${fromEmail || 'onboarding@resend.dev'}>`,
             to: batch,
             subject: subject,
             html: htmlContent,

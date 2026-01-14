@@ -417,6 +417,19 @@
                 <strong>Destinataires :</strong> <span id="recipientsList">Aucun contact sélectionné</span>
             </div>
 
+            <div class="form-group">
+                <label for="templateSelect">Utiliser un template</label>
+                <select id="templateSelect" onchange="loadTemplate()">
+                    <option value="">-- Choisir un template --</option>
+                    <option value="invitation">📨 Invitation au concert</option>
+                    <option value="reminder">⏰ Rappel</option>
+                    <option value="custom">✏️ Personnalisé</option>
+                </select>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Les templates sont modifiables dans le <a href="admin/#/collections/concert/entries/concert-info" target="_blank">CMS</a> (section "Templates Email")
+                </small>
+            </div>
+
             <form id="emailForm" onsubmit="sendEmail(event)">
                 <div class="form-group">
                     <label for="emailSubject">Sujet *</label>
@@ -429,13 +442,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="emailContent">Contenu de l'email *</label>
-                    <textarea id="emailContent" placeholder="Écrivez votre message ici... (HTML supporté)" required></textarea>
+                    <label for="emailContent">Contenu de l'email * <small style="color: #666;">(HTML supporté)</small></label>
+                    <textarea id="emailContent" placeholder="Écrivez votre message ici..." required style="min-height: 200px;"></textarea>
+                    <small style="color: #666;">
+                        Variables disponibles : <code>{{artist_name}}</code>, <code>{{date}}</code>, <code>{{venue}}</code>, <code>{{doors_time}}</code>, <code>{{start_time}}</code>, <code>{{price}}</code>, <code>{{site_url}}</code>
+                    </small>
                 </div>
 
                 <div class="email-preview">
-                    <h4>📧 Aperçu</h4>
-                    <div id="emailPreviewContent" style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                    <h4>📧 Aperçu (avec variables remplacées)</h4>
+                    <div id="emailPreviewContent" style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd;">
                         <em>L'aperçu s'affichera ici...</em>
                     </div>
                 </div>
@@ -485,6 +501,66 @@
         let contacts = [];
         let selectedContacts = new Set();
         let pendingImportData = [];
+        let concertData = null;
+
+        // Load concert data for templates
+        async function loadConcertData() {
+            try {
+                const response = await fetch('/content/concert.json');
+                if (response.ok) {
+                    concertData = await response.json();
+                    // Update sender name from config
+                    if (concertData.email_config?.sender_name) {
+                        document.getElementById('emailFromName').value = concertData.email_config.sender_name;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading concert data:', error);
+            }
+        }
+
+        // Load email template
+        function loadTemplate() {
+            const templateType = document.getElementById('templateSelect').value;
+            if (!templateType || !concertData?.email_templates) return;
+
+            const template = concertData.email_templates[templateType];
+            if (template) {
+                document.getElementById('emailSubject').value = replaceVariables(template.subject);
+                document.getElementById('emailContent').value = template.content;
+                updateEmailPreview();
+            }
+        }
+
+        // Replace template variables with concert data
+        function replaceVariables(text) {
+            if (!text || !concertData) return text;
+
+            const siteUrl = window.location.origin;
+            const price = concertData.registration?.price === 0
+                ? 'Entrée gratuite'
+                : `${concertData.registration?.price}€`;
+
+            return text
+                .replace(/\{\{artist_name\}\}/g, concertData.artist?.name || 'Artiste')
+                .replace(/\{\{date\}\}/g, concertData.hero?.date_display || concertData.datetime?.full_date || '')
+                .replace(/\{\{venue\}\}/g, concertData.venue?.address || '')
+                .replace(/\{\{doors_time\}\}/g, concertData.datetime?.doors || '')
+                .replace(/\{\{start_time\}\}/g, concertData.datetime?.start || '')
+                .replace(/\{\{price\}\}/g, price)
+                .replace(/\{\{site_url\}\}/g, siteUrl);
+        }
+
+        // Update email preview with variables replaced
+        function updateEmailPreview() {
+            const content = document.getElementById('emailContent').value;
+            const preview = document.getElementById('emailPreviewContent');
+            if (content) {
+                preview.innerHTML = replaceVariables(content);
+            } else {
+                preview.innerHTML = '<em>L\'aperçu s\'affichera ici...</em>';
+            }
+        }
 
         // Tab navigation
         function showTab(tabName) {
@@ -844,8 +920,8 @@
                 return;
             }
 
-            const subject = document.getElementById('emailSubject').value.trim();
-            const content = document.getElementById('emailContent').value.trim();
+            const subject = replaceVariables(document.getElementById('emailSubject').value.trim());
+            const content = replaceVariables(document.getElementById('emailContent').value.trim());
             const fromName = document.getElementById('emailFromName').value.trim();
 
             if (!confirm(`Envoyer cet email à ${selectedEmails.length} destinataire(s) ?`)) return;
@@ -861,8 +937,9 @@
                     body: JSON.stringify({
                         to: selectedEmails,
                         subject,
-                        htmlContent: content.replace(/\n/g, '<br>'),
-                        fromName
+                        htmlContent: content,
+                        fromName,
+                        fromEmail: concertData?.email_config?.sender_email || 'onboarding@resend.dev'
                     })
                 });
 
@@ -885,11 +962,8 @@
             }
         }
 
-        // Email preview
-        document.getElementById('emailContent').addEventListener('input', function() {
-            const preview = document.getElementById('emailPreviewContent');
-            preview.innerHTML = this.value.replace(/\n/g, '<br>') || '<em>L\'aperçu s\'affichera ici...</em>';
-        });
+        // Email preview - update when content changes
+        document.getElementById('emailContent').addEventListener('input', updateEmailPreview);
 
         // Export CSV
         function exportContactsCSV() {
@@ -932,6 +1006,7 @@
 
         // Initialize
         loadContacts();
+        loadConcertData(); // Load concert data for email templates
         setInterval(loadContacts, 60000); // Refresh every minute
     </script>
 </body>
