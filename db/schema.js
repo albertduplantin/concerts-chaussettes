@@ -21,3 +21,24 @@ export const contacts = pgTable('contacts', {
   source: varchar('source', { length: 50 }).default('manual'), // 'manual', 'import', 'registration'
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+// Événements / Concerts
+export const events = pgTable('events', {
+  id: serial('id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  date: timestamp('date'),
+  description: text('description'),
+  venue: varchar('venue', { length: 255 }),
+  isActive: boolean('is_active').notNull().default(true), // Événement en cours
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+// Historique de participation - lie les contacts aux événements
+export const participations = pgTable('participations', {
+  id: serial('id').primaryKey(),
+  contactId: integer('contact_id').notNull(),
+  eventId: integer('event_id').notNull(),
+  status: varchar('status', { length: 50 }).default('registered'), // 'registered', 'attended', 'cancelled'
+  guests: integer('guests').default(1),
+  registeredAt: timestamp('registered_at').notNull().defaultNow(),
+});
