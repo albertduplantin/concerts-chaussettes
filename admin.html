@@ -843,14 +843,16 @@
             try {
                 // Load registrations count
                 const regResponse = await fetch('/api/get-registrations');
-                const registrations = await regResponse.json();
+                const regData = await regResponse.json();
+                const registrations = Array.isArray(regData) ? regData : [];
                 const totalPlaces = registrations.reduce((sum, r) => sum + (r.guests || 1), 0);
                 document.getElementById('stat-inscrits').textContent = registrations.length;
                 document.getElementById('stat-places').textContent = totalPlaces;
 
                 // Load contacts with stats
                 const contactsResponse = await fetch('/api/get-contacts-with-stats');
-                const contacts = await contactsResponse.json();
+                const contactsData = await contactsResponse.json();
+                const contacts = Array.isArray(contactsData) ? contactsData : [];
                 document.getElementById('stat-contacts').textContent = contacts.length;
 
                 const activeContacts = contacts.filter(c => parseInt(c.participationCount) >= 2).length;
@@ -926,7 +928,8 @@
         async function loadInscrits() {
             try {
                 const response = await fetch('/api/get-registrations');
-                const registrations = await response.json();
+                const data = await response.json();
+                const registrations = Array.isArray(data) ? data : [];
 
                 const totalPlaces = registrations.reduce((sum, r) => sum + (r.guests || 1), 0);
                 document.getElementById('inscrits-count').textContent = registrations.length;
