@@ -728,8 +728,8 @@
             <div class="alert alert-info">
                 <strong>Variables disponibles :</strong>
                 <code>{{artist_name}}</code>, <code>{{date}}</code>, <code>{{venue}}</code>,
-                <code>{{address}}</code>, <code>{{time}}</code>, <code>{{price}}</code>,
-                <code>{{site_url}}</code>, <code>{{unsubscribe_link}}</code>
+                <code>{{address}}</code>, <code>{{doors_time}}</code>, <code>{{start_time}}</code>,
+                <code>{{end_time}}</code>, <code>{{price}}</code>, <code>{{site_url}}</code>, <code>{{unsubscribe_link}}</code>
             </div>
 
             <div class="actions">
@@ -1560,10 +1560,13 @@
             const price = concertData.registration?.price === 0 ? 'Entrée gratuite' : `${concertData.registration?.price}€`;
             return text
                 .replace(/\{\{artist_name\}\}/g, concertData.artist?.name || 'Artiste')
-                .replace(/\{\{date\}\}/g, concertData.hero?.date_display || '')
-                .replace(/\{\{venue\}\}/g, concertData.venue?.name || '')
+                .replace(/\{\{date\}\}/g, concertData.hero?.date_display || concertData.datetime?.full_date || '')
+                .replace(/\{\{venue\}\}/g, concertData.venue?.address || '')
                 .replace(/\{\{address\}\}/g, concertData.venue?.address || '')
-                .replace(/\{\{time\}\}/g, concertData.hero?.time || '')
+                .replace(/\{\{time\}\}/g, concertData.datetime?.start || '')
+                .replace(/\{\{doors_time\}\}/g, concertData.datetime?.doors || '')
+                .replace(/\{\{start_time\}\}/g, concertData.datetime?.start || '')
+                .replace(/\{\{end_time\}\}/g, concertData.datetime?.end || '')
                 .replace(/\{\{price\}\}/g, price)
                 .replace(/\{\{site_url\}\}/g, siteUrl)
                 .replace(/\{\{unsubscribe_link\}\}/g, `${siteUrl}/unsubscribe`);
