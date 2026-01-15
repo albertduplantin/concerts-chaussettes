@@ -1649,7 +1649,7 @@
 
                 const result = await response.json();
 
-                if (result.success) {
+                if (result.success && result.sent > 0) {
                     alert(`Emails envoyés avec succès ! (${result.sent} envoyé(s))`);
                     // Clear session storage after successful send
                     sessionStorage.removeItem('emailRecipients');
@@ -1657,7 +1657,14 @@
                     // Clear inscrits selection
                     selectedInscrits.clear();
                 } else {
-                    alert('Erreur : ' + (result.error || 'Erreur inconnue'));
+                    let errorMsg = result.error || result.message || 'Erreur inconnue';
+                    if (result.errors && result.errors.length > 0) {
+                        errorMsg += '\n\nDétails: ' + result.errors.join(', ');
+                    }
+                    if (errorMsg.includes('onboarding@resend.dev') || result.sent === 0) {
+                        errorMsg += '\n\nNote: Avec le domaine onboarding@resend.dev, vous ne pouvez envoyer qu\'à votre propre email vérifié sur Resend. Configurez un domaine personnalisé sur Resend pour envoyer à d\'autres destinataires.';
+                    }
+                    alert('Erreur : ' + errorMsg);
                 }
             } catch (e) {
                 alert('Erreur : ' + e.message);
