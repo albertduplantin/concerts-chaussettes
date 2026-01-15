@@ -514,12 +514,18 @@
             <div class="actions">
                 <button class="btn btn-primary" onclick="exportInscrits()">Exporter CSV</button>
                 <button class="btn btn-success" onclick="exportInscritsPDF()">Exporter PDF</button>
+                <button class="btn btn-warning" onclick="emailSelectedInscrits()">Envoyer email</button>
                 <button class="btn btn-danger" onclick="deleteAllRegistrations()">Tout supprimer</button>
+            </div>
+
+            <div id="inscrits-selection-info" class="alert alert-info" style="display: none;">
+                <span id="inscrits-selected-count">0</span> inscrit(s) sélectionné(s)
             </div>
 
             <table>
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="select-all-inscrits" onchange="toggleAllInscrits()"></th>
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Téléphone</th>
@@ -529,7 +535,7 @@
                     </tr>
                 </thead>
                 <tbody id="inscrits-body">
-                    <tr><td colspan="6" class="loading">Chargement...</td></tr>
+                    <tr><td colspan="7" class="loading">Chargement...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -791,6 +797,8 @@
         // Global state
         let contactsData = [];
         let selectedContacts = new Set();
+        let selectedInscrits = new Set();
+        let inscritsData = [];
         let concertData = null;
         let eventsData = [];
 
@@ -933,21 +941,23 @@
             try {
                 const response = await fetch('/api/get-registrations');
                 const data = await response.json();
-                const registrations = Array.isArray(data) ? data : (data.registrations || []);
+                inscritsData = Array.isArray(data) ? data : (data.registrations || []);
 
-                const totalPlaces = registrations.reduce((sum, r) => sum + (r.guests || 1), 0);
-                document.getElementById('inscrits-count').textContent = registrations.length;
+                const totalPlaces = inscritsData.reduce((sum, r) => sum + (r.guests || 1), 0);
+                document.getElementById('inscrits-count').textContent = inscritsData.length;
                 document.getElementById('inscrits-places').textContent = totalPlaces;
 
                 const tbody = document.getElementById('inscrits-body');
 
-                if (registrations.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6">Aucune inscription</td></tr>';
+                if (inscritsData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7">Aucune inscription</td></tr>';
+                    document.getElementById('inscrits-selection-info').style.display = 'none';
                     return;
                 }
 
-                tbody.innerHTML = registrations.map(r => `
+                tbody.innerHTML = inscritsData.map(r => `
                     <tr>
+                        <td><input type="checkbox" class="inscrit-checkbox" data-id="${r.id}" data-email="${r.email}" ${selectedInscrits.has(r.id) ? 'checked' : ''} onchange="toggleInscrit(${r.id}, '${r.email}')"></td>
                         <td>${r.name}</td>
                         <td>${r.email}</td>
                         <td>${r.phone}</td>
@@ -959,9 +969,72 @@
                         </td>
                     </tr>
                 `).join('');
+
+                updateInscritsSelectionInfo();
             } catch (e) {
                 console.error('Error loading inscrits:', e);
             }
+        }
+
+        function toggleInscrit(id, email) {
+            if (selectedInscrits.has(id)) {
+                selectedInscrits.delete(id);
+            } else {
+                selectedInscrits.add(id);
+            }
+            updateInscritsSelectionInfo();
+        }
+
+        function toggleAllInscrits() {
+            const checked = document.getElementById('select-all-inscrits').checked;
+            inscritsData.forEach(r => {
+                if (checked) {
+                    selectedInscrits.add(r.id);
+                } else {
+                    selectedInscrits.delete(r.id);
+                }
+            });
+            // Update checkboxes
+            document.querySelectorAll('.inscrit-checkbox').forEach(cb => {
+                cb.checked = checked;
+            });
+            updateInscritsSelectionInfo();
+        }
+
+        function updateInscritsSelectionInfo() {
+            const infoDiv = document.getElementById('inscrits-selection-info');
+            const countSpan = document.getElementById('inscrits-selected-count');
+            if (selectedInscrits.size > 0) {
+                infoDiv.style.display = 'block';
+                countSpan.textContent = selectedInscrits.size;
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        function emailSelectedInscrits() {
+            if (selectedInscrits.size === 0) {
+                alert('Veuillez sélectionner au moins un inscrit');
+                return;
+            }
+
+            // Get selected emails
+            const selectedEmails = inscritsData
+                .filter(r => selectedInscrits.has(r.id))
+                .map(r => r.email);
+
+            // Store in session for email page
+            sessionStorage.setItem('emailRecipients', JSON.stringify(selectedEmails));
+            sessionStorage.setItem('emailRecipientsSource', 'inscrits');
+
+            // Switch to email page
+            showPage('email');
+
+            // Pre-fill recipients info
+            document.getElementById('email-recipients').value = 'selected';
+
+            // Show info message
+            alert(`${selectedEmails.length} inscrit(s) sélectionné(s) pour l'envoi d'email`);
         }
 
         function editInscrit(id, name, email, phone, guests) {
@@ -1535,11 +1608,18 @@
             let toEmails = [];
 
             if (recipients === 'selected') {
-                if (selectedContacts.size === 0) {
-                    alert('Veuillez sélectionner des contacts dans l\'onglet Contacts');
+                // Check if we have emails from inscrits selection
+                const storedEmails = sessionStorage.getItem('emailRecipients');
+                const source = sessionStorage.getItem('emailRecipientsSource');
+
+                if (storedEmails && source === 'inscrits') {
+                    toEmails = JSON.parse(storedEmails);
+                } else if (selectedContacts.size > 0) {
+                    toEmails = contactsData.filter(c => selectedContacts.has(c.id)).map(c => c.email);
+                } else {
+                    alert('Veuillez sélectionner des contacts ou des inscrits');
                     return;
                 }
-                toEmails = contactsData.filter(c => selectedContacts.has(c.id)).map(c => c.email);
             } else {
                 toEmails = contactsData.filter(c => c.subscribed).map(c => c.email);
             }
@@ -1568,6 +1648,11 @@
 
                 if (result.success) {
                     alert(`Emails envoyés avec succès ! (${result.sent} envoyé(s))`);
+                    // Clear session storage after successful send
+                    sessionStorage.removeItem('emailRecipients');
+                    sessionStorage.removeItem('emailRecipientsSource');
+                    // Clear inscrits selection
+                    selectedInscrits.clear();
                 } else {
                     alert('Erreur : ' + (result.error || 'Erreur inconnue'));
                 }
