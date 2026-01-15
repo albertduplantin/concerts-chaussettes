@@ -844,7 +844,7 @@
                 // Load registrations count
                 const regResponse = await fetch('/api/get-registrations');
                 const regData = await regResponse.json();
-                const registrations = Array.isArray(regData) ? regData : [];
+                const registrations = Array.isArray(regData) ? regData : (regData.registrations || []);
                 const totalPlaces = registrations.reduce((sum, r) => sum + (r.guests || 1), 0);
                 document.getElementById('stat-inscrits').textContent = registrations.length;
                 document.getElementById('stat-places').textContent = totalPlaces;
@@ -929,7 +929,7 @@
             try {
                 const response = await fetch('/api/get-registrations');
                 const data = await response.json();
-                const registrations = Array.isArray(data) ? data : [];
+                const registrations = Array.isArray(data) ? data : (data.registrations || []);
 
                 const totalPlaces = registrations.reduce((sum, r) => sum + (r.guests || 1), 0);
                 document.getElementById('inscrits-count').textContent = registrations.length;
