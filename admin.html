@@ -697,6 +697,18 @@
             <h1>Emailing</h1>
             <p class="subtitle">Envoyez des emails à vos contacts</p>
 
+            <!-- Test connexion Brevo -->
+            <div class="stat-cards" style="margin-bottom: 20px;">
+                <div class="stat-card" id="brevo-status-card">
+                    <h3 id="brevo-status">Non testé</h3>
+                    <p>Statut Brevo</p>
+                </div>
+                <div class="stat-card">
+                    <button class="btn btn-primary" onclick="testBrevoConnection()" style="margin: 0;">Tester connexion Brevo</button>
+                </div>
+            </div>
+            <div id="brevo-test-result" class="alert" style="display: none;"></div>
+
             <div class="form-group">
                 <label for="email-template">Choisir un modèle</label>
                 <select id="email-template" onchange="loadTemplate()">
@@ -1554,6 +1566,53 @@
         }
 
         // Email
+        async function testBrevoConnection() {
+            const statusEl = document.getElementById('brevo-status');
+            const cardEl = document.getElementById('brevo-status-card');
+            const resultDiv = document.getElementById('brevo-test-result');
+
+            statusEl.textContent = 'Test en cours...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/send-email-brevo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ testMode: true })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusEl.textContent = 'Connecté';
+                    cardEl.classList.add('green');
+                    cardEl.classList.remove('red');
+                    resultDiv.style.display = 'block';
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `
+                        <strong>Connexion Brevo réussie !</strong><br>
+                        Compte : ${result.account?.email || 'N/A'}<br>
+                        Nom : ${result.account?.firstName || ''} ${result.account?.lastName || ''}<br>
+                        Plan : ${result.account?.plan || 'free'}
+                    `;
+                } else {
+                    statusEl.textContent = 'Erreur';
+                    cardEl.classList.add('red');
+                    cardEl.classList.remove('green');
+                    resultDiv.style.display = 'block';
+                    resultDiv.className = 'alert alert-warning';
+                    resultDiv.textContent = result.error || 'Erreur de connexion';
+                }
+            } catch (e) {
+                statusEl.textContent = 'Erreur';
+                cardEl.classList.add('red');
+                cardEl.classList.remove('green');
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'alert alert-warning';
+                resultDiv.textContent = 'Erreur : ' + e.message;
+            }
+        }
+
         function replaceVariables(text) {
             if (!text || !concertData) return text;
             const siteUrl = window.location.origin;
@@ -1635,7 +1694,7 @@
             if (!confirm(`Envoyer à ${toEmails.length} destinataire(s) ?`)) return;
 
             try {
-                const response = await fetch('/api/send-email', {
+                const response = await fetch('/api/send-email-brevo', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1643,14 +1702,14 @@
                         subject: replaceVariables(subject),
                         htmlContent: replaceVariables(content),
                         fromName: concertData?.email_config?.sender_name || 'Concert Chaussettes',
-                        fromEmail: concertData?.email_config?.sender_email || 'onboarding@resend.dev'
+                        fromEmail: concertData?.email_config?.sender_email || 'concert-chaussettes@gmail.com'
                     })
                 });
 
                 const result = await response.json();
 
                 if (result.success && result.sent > 0) {
-                    alert(`Emails envoyés avec succès ! (${result.sent} envoyé(s))`);
+                    alert(`Emails envoyés avec succès via Brevo ! (${result.sent} envoyé(s), ${result.failed} échec(s))`);
                     // Clear session storage after successful send
                     sessionStorage.removeItem('emailRecipients');
                     sessionStorage.removeItem('emailRecipientsSource');
@@ -1659,10 +1718,7 @@
                 } else {
                     let errorMsg = result.error || result.message || 'Erreur inconnue';
                     if (result.errors && result.errors.length > 0) {
-                        errorMsg += '\n\nDétails: ' + result.errors.join(', ');
-                    }
-                    if (errorMsg.includes('onboarding@resend.dev') || result.sent === 0) {
-                        errorMsg += '\n\nNote: Avec le domaine onboarding@resend.dev, vous ne pouvez envoyer qu\'à votre propre email vérifié sur Resend. Configurez un domaine personnalisé sur Resend pour envoyer à d\'autres destinataires.';
+                        errorMsg += '\n\nDétails:\n' + result.errors.join('\n');
                     }
                     alert('Erreur : ' + errorMsg);
                 }
