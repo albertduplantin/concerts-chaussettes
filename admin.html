@@ -1748,11 +1748,11 @@
             let toEmails = [];
 
             if (recipients === 'selected') {
-                // Check if we have emails from inscrits selection
+                // Check if we have emails from session storage (from inscrits or contacts selection)
                 const storedEmails = sessionStorage.getItem('emailRecipients');
                 const source = sessionStorage.getItem('emailRecipientsSource');
 
-                if (storedEmails && source === 'inscrits') {
+                if (storedEmails && (source === 'inscrits' || source === 'contacts')) {
                     toEmails = JSON.parse(storedEmails);
                 } else if (selectedContacts.size > 0) {
                     toEmails = contactsData.filter(c => selectedContacts.has(c.id)).map(c => c.email);
@@ -1780,7 +1780,7 @@
                         subject: replaceVariables(subject),
                         htmlContent: replaceVariables(content),
                         fromName: concertData?.email_config?.sender_name || 'Concert Chaussettes',
-                        fromEmail: concertData?.email_config?.sender_email || 'concert-chaussettes@gmail.com'
+                        fromEmail: concertData?.email_config?.sender_email || 'topinambour124@gmail.com'
                     })
                 });
 
