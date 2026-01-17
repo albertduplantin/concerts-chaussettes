@@ -1769,22 +1769,34 @@
                 return;
             }
 
-            if (!confirm(`Envoyer à ${toEmails.length} destinataire(s) ?`)) return;
+            // Debug info
+            const requestData = {
+                to: toEmails,
+                subject: replaceVariables(subject),
+                htmlContent: replaceVariables(content),
+                fromName: concertData?.email_config?.sender_name || 'Concert Chaussettes',
+                fromEmail: concertData?.email_config?.sender_email || 'topinambour124@gmail.com'
+            };
+
+            console.log('=== DEBUG EMAIL ===');
+            console.log('Destinataires:', toEmails);
+            console.log('Sujet:', requestData.subject);
+            console.log('From:', requestData.fromName, requestData.fromEmail);
+            console.log('Request data:', requestData);
+
+            if (!confirm(`Envoyer à ${toEmails.length} destinataire(s) ?\n\nDestinataires: ${toEmails.join(', ')}\nExpéditeur: ${requestData.fromEmail}`)) return;
 
             try {
+                console.log('Envoi en cours...');
                 const response = await fetch('/api/send-email-brevo', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        to: toEmails,
-                        subject: replaceVariables(subject),
-                        htmlContent: replaceVariables(content),
-                        fromName: concertData?.email_config?.sender_name || 'Concert Chaussettes',
-                        fromEmail: concertData?.email_config?.sender_email || 'topinambour124@gmail.com'
-                    })
+                    body: JSON.stringify(requestData)
                 });
 
+                console.log('Response status:', response.status);
                 const result = await response.json();
+                console.log('Response data:', result);
 
                 if (result.success && result.sent > 0) {
                     alert(`Emails envoyés avec succès via Brevo ! (${result.sent} envoyé(s), ${result.failed} échec(s))`);
@@ -1798,9 +1810,11 @@
                     if (result.errors && result.errors.length > 0) {
                         errorMsg += '\n\nDétails:\n' + result.errors.join('\n');
                     }
+                    console.error('Erreur envoi:', errorMsg);
                     alert('Erreur : ' + errorMsg);
                 }
             } catch (e) {
+                console.error('Exception:', e);
                 alert('Erreur : ' + e.message);
             }
         }
