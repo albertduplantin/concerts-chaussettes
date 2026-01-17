@@ -519,7 +519,8 @@
             <div class="actions">
                 <button class="btn btn-primary" onclick="exportInscrits()">Exporter CSV</button>
                 <button class="btn btn-success" onclick="exportInscritsPDF()">Exporter PDF</button>
-                <button class="btn btn-warning" onclick="emailSelectedInscrits()">Envoyer email</button>
+                <button class="btn btn-warning" onclick="emailSelectedInscrits()">Envoyer email (Brevo)</button>
+                <button class="btn" style="background: #EA4335; color: white;" onclick="prepareGmailInscrits()">Préparer pour Gmail</button>
                 <button class="btn btn-danger" onclick="deleteAllRegistrations()">Tout supprimer</button>
             </div>
 
@@ -571,7 +572,8 @@
 
                 <div class="actions">
                     <button class="btn btn-primary" onclick="exportContacts()">Exporter CSV</button>
-                    <button class="btn btn-warning" onclick="emailSelectedContacts()">Envoyer email</button>
+                    <button class="btn btn-warning" onclick="emailSelectedContacts()">Envoyer email (Brevo)</button>
+                    <button class="btn" style="background: #EA4335; color: white;" onclick="prepareGmailContacts()">Préparer pour Gmail</button>
                 </div>
 
                 <div id="contacts-selection-info" class="alert alert-info" style="display: none;">
@@ -804,6 +806,58 @@
                 </div>
                 <button type="submit" class="btn btn-success">Enregistrer</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Gmail Modal -->
+    <div id="gmail-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2>Préparer pour Gmail</h2>
+                <button class="modal-close" onclick="closeGmailModal()">&times;</button>
+            </div>
+            <div id="gmail-content">
+                <div class="form-group">
+                    <label>1. Destinataires (à copier dans le champ "À" ou "Cci" de Gmail)</label>
+                    <div style="position: relative;">
+                        <textarea id="gmail-recipients" rows="3" readonly style="width: 100%; font-family: monospace; font-size: 12px;"></textarea>
+                        <button class="btn btn-sm btn-primary" onclick="copyToClipboard('gmail-recipients')" style="position: absolute; top: 5px; right: 5px;">Copier</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>2. Sujet (à copier dans le champ "Objet" de Gmail)</label>
+                    <div style="position: relative;">
+                        <input type="text" id="gmail-subject" readonly style="width: 100%;">
+                        <button class="btn btn-sm btn-primary" onclick="copyToClipboard('gmail-subject')" style="position: absolute; top: 5px; right: 5px;">Copier</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>3. Choisir un template</label>
+                    <select id="gmail-template" onchange="loadGmailTemplate()" style="width: 100%;">
+                        <option value="">-- Sélectionner --</option>
+                        <option value="invitation">Invitation</option>
+                        <option value="reminder">Rappel</option>
+                        <option value="custom">Personnalisé</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>4. Message HTML (cliquez sur Copier, puis dans Gmail: Ctrl+V)</label>
+                    <div style="position: relative;">
+                        <div id="gmail-body-preview" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; max-height: 300px; overflow-y: auto; background: white;"></div>
+                        <button class="btn btn-sm btn-primary" onclick="copyHtmlToClipboard()" style="position: absolute; top: 5px; right: 5px;">Copier HTML</button>
+                    </div>
+                </div>
+                <div class="alert alert-info" style="margin-top: 15px;">
+                    <strong>Instructions Gmail :</strong>
+                    <ol style="margin: 10px 0 0 20px; padding: 0;">
+                        <li>Ouvrez Gmail et cliquez "Nouveau message"</li>
+                        <li>Collez les destinataires dans "Cci" (pour cacher les adresses entre elles)</li>
+                        <li>Collez le sujet</li>
+                        <li>Cliquez dans le corps du message et collez (Ctrl+V) le HTML</li>
+                        <li>Envoyez !</li>
+                    </ol>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1346,6 +1400,104 @@
 
             // Show confirmation
             alert(`${emails.length} contact(s) sélectionné(s) pour l'envoi d'email`);
+        }
+
+        // Gmail preparation functions
+        function prepareGmailInscrits() {
+            if (selectedInscrits.size === 0) {
+                alert('Veuillez sélectionner au moins un inscrit');
+                return;
+            }
+
+            const emails = inscritsData
+                .filter(r => selectedInscrits.has(r.id))
+                .map(r => r.email);
+
+            openGmailModal(emails);
+        }
+
+        function prepareGmailContacts() {
+            if (selectedContacts.size === 0) {
+                alert('Veuillez sélectionner au moins un contact');
+                return;
+            }
+
+            const emails = contactsData
+                .filter(c => selectedContacts.has(c.id))
+                .map(c => c.email);
+
+            openGmailModal(emails);
+        }
+
+        function openGmailModal(emails) {
+            const modal = document.getElementById('gmail-modal');
+            document.getElementById('gmail-recipients').value = emails.join(', ');
+            document.getElementById('gmail-subject').value = '';
+            document.getElementById('gmail-body-preview').innerHTML = '<p style="color: #999;">Sélectionnez un template ci-dessus</p>';
+            document.getElementById('gmail-template').value = '';
+            modal.classList.add('active');
+        }
+
+        function closeGmailModal() {
+            document.getElementById('gmail-modal').classList.remove('active');
+        }
+
+        function loadGmailTemplate() {
+            const template = document.getElementById('gmail-template').value;
+            if (!template || !concertData?.email_templates) return;
+
+            const tpl = concertData.email_templates[template];
+            if (tpl) {
+                document.getElementById('gmail-subject').value = replaceVariables(tpl.subject || '');
+                const htmlContent = replaceVariables(tpl.content || '');
+                document.getElementById('gmail-body-preview').innerHTML = htmlContent;
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.value || element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showCopyFeedback(element);
+            });
+        }
+
+        function copyHtmlToClipboard() {
+            const preview = document.getElementById('gmail-body-preview');
+            const html = preview.innerHTML;
+
+            // Create a temporary element to copy rich text
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            document.body.appendChild(tempDiv);
+
+            // Select and copy
+            const range = document.createRange();
+            range.selectNodeContents(tempDiv);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            try {
+                document.execCommand('copy');
+                showCopyFeedback(preview);
+            } catch (e) {
+                // Fallback to plain text
+                navigator.clipboard.writeText(html);
+            }
+
+            selection.removeAllRanges();
+            document.body.removeChild(tempDiv);
+        }
+
+        function showCopyFeedback(element) {
+            const originalBorder = element.style.border;
+            element.style.border = '2px solid #28a745';
+            setTimeout(() => {
+                element.style.border = originalBorder;
+            }, 500);
         }
 
         async function showHistory(contactId, name) {
