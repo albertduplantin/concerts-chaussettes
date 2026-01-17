@@ -571,6 +571,11 @@
 
                 <div class="actions">
                     <button class="btn btn-primary" onclick="exportContacts()">Exporter CSV</button>
+                    <button class="btn btn-warning" onclick="emailSelectedContacts()">Envoyer email</button>
+                </div>
+
+                <div id="contacts-selection-info" class="alert alert-info" style="display: none;">
+                    <span id="contacts-selected-count">0</span> contact(s) sélectionné(s)
                 </div>
 
                 <table>
@@ -1292,6 +1297,7 @@
             } else {
                 selectedContacts.add(id);
             }
+            updateContactsSelectionInfo();
         }
 
         function toggleAllContacts() {
@@ -1304,6 +1310,42 @@
                 }
             });
             loadContacts();
+            updateContactsSelectionInfo();
+        }
+
+        function updateContactsSelectionInfo() {
+            const infoDiv = document.getElementById('contacts-selection-info');
+            const countSpan = document.getElementById('contacts-selected-count');
+            if (selectedContacts.size > 0) {
+                infoDiv.style.display = 'block';
+                countSpan.textContent = selectedContacts.size;
+            } else {
+                infoDiv.style.display = 'none';
+            }
+        }
+
+        function emailSelectedContacts() {
+            if (selectedContacts.size === 0) {
+                alert('Veuillez sélectionner au moins un contact');
+                return;
+            }
+
+            const emails = contactsData
+                .filter(c => selectedContacts.has(c.id))
+                .map(c => c.email);
+
+            // Store in session storage
+            sessionStorage.setItem('emailRecipients', JSON.stringify(emails));
+            sessionStorage.setItem('emailRecipientsSource', 'contacts');
+
+            // Navigate to email page
+            showPage('email');
+
+            // Update recipients dropdown
+            document.getElementById('email-recipients').value = 'selected';
+
+            // Show confirmation
+            alert(`${emails.length} contact(s) sélectionné(s) pour l'envoi d'email`);
         }
 
         async function showHistory(contactId, name) {
