@@ -1616,18 +1616,20 @@
             if (!text || !concertData) return text;
             const siteUrl = window.location.origin;
             const price = concertData.registration?.price === 0 ? 'Entrée gratuite' : `${concertData.registration?.price}€`;
+
+            // Support both {{variable}} and {{params.variable}} formats (Brevo uses params.)
             return text
-                .replace(/\{\{artist_name\}\}/g, concertData.artist?.name || 'Artiste')
-                .replace(/\{\{date\}\}/g, concertData.hero?.date_display || concertData.datetime?.full_date || '')
-                .replace(/\{\{venue\}\}/g, concertData.venue?.address || '')
-                .replace(/\{\{address\}\}/g, concertData.venue?.address || '')
-                .replace(/\{\{time\}\}/g, concertData.datetime?.start || '')
-                .replace(/\{\{doors_time\}\}/g, concertData.datetime?.doors || '')
-                .replace(/\{\{start_time\}\}/g, concertData.datetime?.start || '')
-                .replace(/\{\{end_time\}\}/g, concertData.datetime?.end || '')
-                .replace(/\{\{price\}\}/g, price)
-                .replace(/\{\{site_url\}\}/g, siteUrl)
-                .replace(/\{\{unsubscribe_link\}\}/g, `${siteUrl}/unsubscribe`);
+                .replace(/\{\{(params\.)?artist_name\}\}/g, concertData.artist?.name || 'Artiste')
+                .replace(/\{\{(params\.)?date\}\}/g, concertData.hero?.date_display || concertData.datetime?.full_date || '')
+                .replace(/\{\{(params\.)?venue\}\}/g, concertData.venue?.address || '')
+                .replace(/\{\{(params\.)?address\}\}/g, concertData.venue?.address || '')
+                .replace(/\{\{(params\.)?time\}\}/g, concertData.datetime?.start || '')
+                .replace(/\{\{(params\.)?doors_time\}\}/g, concertData.datetime?.doors || '')
+                .replace(/\{\{(params\.)?start_time\}\}/g, concertData.datetime?.start || '')
+                .replace(/\{\{(params\.)?end_time\}\}/g, concertData.datetime?.end || '')
+                .replace(/\{\{(params\.)?price\}\}/g, price)
+                .replace(/\{\{(params\.)?site_url\}\}/g, siteUrl)
+                .replace(/\{\{(params\.)?unsubscribe_link\}\}/g, `${siteUrl}/unsubscribe`);
         }
 
         let brevoTemplates = [];
