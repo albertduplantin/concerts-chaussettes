@@ -92,11 +92,21 @@ class RegistrationManager {
             });
 
             if (response.ok) {
+                const result = await response.json();
                 await this.loadRegistrations();
                 this.updateUI();
+
+                // Build message with modify link
+                let message = `Inscription confirmée pour ${data.name} (${data.guests} personne${data.guests > 1 ? 's' : ''}) !`;
+                if (result.modifyUrl) {
+                    const fullUrl = window.location.origin + result.modifyUrl;
+                    message += `<br><br><small>Conservez ce lien pour modifier ou annuler votre réservation :<br><a href="${fullUrl}" target="_blank">${fullUrl}</a></small>`;
+                }
+
                 return {
                     success: true,
-                    message: `Inscription confirmée pour ${data.name} (${data.guests} personne${data.guests > 1 ? 's' : ''}) !`
+                    message: message,
+                    modifyUrl: result.modifyUrl
                 };
             } else {
                 return {
@@ -265,16 +275,22 @@ class RegistrationManager {
         // Create new message
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
-        messageDiv.textContent = message;
+        // Use innerHTML for success messages (may contain links)
+        if (type === 'success') {
+            messageDiv.innerHTML = message;
+        } else {
+            messageDiv.textContent = message;
+        }
 
         // Insert at the beginning of the form
         form.insertBefore(messageDiv, form.firstChild);
 
-        // Auto-remove after 5 seconds
+        // Auto-remove (longer for success messages with links)
+        const delay = (type === 'success' && message.includes('href')) ? 30000 : 5000;
         setTimeout(() => {
             messageDiv.style.opacity = '0';
             setTimeout(() => messageDiv.remove(), 500);
-        }, 5000);
+        }, delay);
     }
 }
 
