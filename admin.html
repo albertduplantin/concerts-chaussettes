@@ -710,13 +710,11 @@
             <div id="brevo-test-result" class="alert" style="display: none;"></div>
 
             <div class="form-group">
-                <label for="email-template">Choisir un modèle</label>
+                <label for="email-template">Choisir un modèle (Brevo)</label>
                 <select id="email-template" onchange="loadTemplate()">
-                    <option value="">-- Sélectionner un modèle --</option>
-                    <option value="invitation">Invitation</option>
-                    <option value="reminder">Rappel</option>
-                    <option value="custom">Personnalisé</option>
+                    <option value="">-- Chargement des templates... --</option>
                 </select>
+                <button type="button" class="btn btn-sm" onclick="loadBrevoTemplates()" style="margin-top: 5px;">Rafraîchir les templates</button>
             </div>
 
             <div class="form-group">
@@ -848,6 +846,7 @@
             if (pageId === 'inscrits') loadInscrits();
             if (pageId === 'contacts') loadContacts();
             if (pageId === 'events') loadEvents();
+            if (pageId === 'email') loadBrevoTemplates();
         }
 
         // Load concert data
@@ -1631,14 +1630,44 @@
                 .replace(/\{\{unsubscribe_link\}\}/g, `${siteUrl}/unsubscribe`);
         }
 
-        function loadTemplate() {
-            const template = document.getElementById('email-template').value;
-            if (!template || !concertData?.email_templates) return;
+        let brevoTemplates = [];
 
-            const tpl = concertData.email_templates[template];
+        async function loadBrevoTemplates() {
+            const select = document.getElementById('email-template');
+            select.innerHTML = '<option value="">-- Chargement... --</option>';
+
+            try {
+                const response = await fetch('/api/get-brevo-templates');
+                const data = await response.json();
+
+                if (data.success && data.templates) {
+                    brevoTemplates = data.templates;
+                    select.innerHTML = '<option value="">-- Sélectionner un modèle --</option>' +
+                        '<option value="custom">✏️ Personnalisé</option>' +
+                        brevoTemplates.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+                } else {
+                    select.innerHTML = '<option value="">Erreur de chargement</option><option value="custom">✏️ Personnalisé</option>';
+                }
+            } catch (e) {
+                console.error('Error loading Brevo templates:', e);
+                select.innerHTML = '<option value="">Erreur de chargement</option><option value="custom">✏️ Personnalisé</option>';
+            }
+        }
+
+        function loadTemplate() {
+            const templateId = document.getElementById('email-template').value;
+            if (!templateId || templateId === 'custom') {
+                if (templateId === 'custom') {
+                    document.getElementById('email-subject').value = '';
+                    document.getElementById('email-content').value = '';
+                }
+                return;
+            }
+
+            const tpl = brevoTemplates.find(t => t.id == templateId);
             if (tpl) {
                 document.getElementById('email-subject').value = tpl.subject || '';
-                document.getElementById('email-content').value = tpl.content || '';
+                document.getElementById('email-content').value = tpl.htmlContent || '';
             }
         }
 
